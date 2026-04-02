@@ -1,397 +1,366 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>微信风格特效祝福</title>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        /* 顶部状态栏 */
-        .status-bar {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 15px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* 主内容区域 - 最大化动画显示 */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow: hidden;
-        }
-        
-        /* 动画容器 - 占据大部分空间 */
-        .animation-container {
-            width: 100%;
-            height: 70vh;
-            max-height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        lottie-player {
-            width: 100%;
-            height: 100%;
-            max-width: 400px;
-            max-height: 400px;
-        }
-        
-        /* 提示文字 */
-        .hint-text {
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 15px;
-            padding: 0 20px;
-        }
-        
-        /* 快捷关键词区域 */
-        .quick-words {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 0 20px;
-        }
-        
-        .quick-word {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 8px 16px;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        
-        .quick-word:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-        
-        /* 微信风格输入区域 */
-        .input-area {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-top: 1px solid #e0e0e0;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .message-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            font-size: 16px;
-            outline: none;
-            background: white;
-            transition: border-color 0.3s;
-        }
-        
-        .message-input:focus {
-            border-color: #07c160;
-        }
-        
-        .send-button {
-            background: #07c160;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 18px;
-        }
-        
-        .send-button:hover {
-            background: #06ad56;
-            transform: scale(1.05);
-        }
-        
-        /* 底部信息 */
-        .footer {
-            text-align: center;
-            padding: 15px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-        
-        .footer a {
-            color: #07c160;
-            text-decoration: none;
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 480px) {
-            .animation-container {
-                height: 60vh;
-            }
-            
-            .quick-words {
-                gap: 8px;
-            }
-            
-            .quick-word {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
-            
-            .input-area {
-                padding: 12px;
-            }
-            
-            .message-input {
-                padding: 10px 14px;
-                font-size: 15px;
-            }
-        }
-        
-        /* 付费解锁提示 */
-        .premium-hint {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin: 15px 20px;
-            text-align: center;
-            font-size: 13px;
-            display: none;
-        }
-        
-        .premium-hint.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+ <title>特效祝福 - 全屏动画</title>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ body {
+ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+ background: linear-gradient(145deg, #1e2b3a 0%, #0f1a24 100%);
+ min-height: 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+ }
+ /* 卡片容器 */
+ .card {
+ background: rgba(255,255,255,0.95);
+ border-radius: 32px;
+ padding: 30px 20px 40px;
+ max-width: 500px;
+ width: 100%;
+ box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+ text-align: center;
+ backdrop-filter: blur(2px);
+ z-index: 2;
+ position: relative;
+ }
+ h1 {
+ font-size: 28px;
+ color: #ff7e5e;
+ margin-bottom: 20px;
+ }
+ .input-group {
+ display: flex;
+ gap: 10px;
+ margin: 20px 0;
+ }
+ input {
+ flex: 1;
+ padding: 12px 16px;
+ font-size: 16px;
+ border: 2px solid #e0e0e0;
+ border-radius: 48px;
+ outline: none;
+ transition: 0.2s;
+ }
+ input:focus {
+ border-color: #ff7e5e;
+ }
+ button {
+ background: #ff7e5e;
+ border: none;
+ color: white;
+ padding: 12px 24px;
+ border-radius: 48px;
+ font-size: 16px;
+ font-weight: bold;
+ cursor: pointer;
+ transition: 0.2s;
+ }
+ button:hover {
+ background: #ff6347;
+ transform: scale(1.02);
+ }
+ .tips {
+ margin-top: 20px;
+ font-size: 14px;
+ color: #666;
+ }
+ .tips span {
+ display: inline-block;
+ background: #f0f0f0;
+ padding: 5px 12px;
+ border-radius: 20px;
+ margin: 5px;
+ font-size: 13px;
+ cursor: pointer;
+ transition: 0.2s;
+ }
+ .tips span:hover {
+ background: #ff7e5e;
+ color: white;
+ }
+ /* 动画全屏容器 */
+ #animationContainer {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ pointer-events: none; /* 让动画不干扰点击 */
+ z-index: 9999;
+ visibility: hidden; /* 初始隐藏 */
+ }
+ /* 解锁按钮样式 */
+ .unlock-btn {
+ background: linear-gradient(135deg, #ffaa44 0%, #ff8800 100%);
+ margin-top: 20px;
+ padding: 15px 30px;
+ font-size: 18px;
+ box-shadow: 0 5px 15px rgba(255, 170, 68, 0.4);
+ }
+ .unlock-btn:hover {
+ background: linear-gradient(135deg, #ffbb44 0%, #ff9900 100%);
+ transform: scale(1.05);
+ box-shadow: 0 8px 20px rgba(255, 170, 68, 0.6);
+ }
+ /* 支付二维码模态框 */
+ .modal {
+ display: none;
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0,0,0,0.8);
+ z-index: 10000;
+ justify-content: center;
+ align-items: center;
+ }
+ .modal-content {
+ background: white;
+ padding: 30px;
+ border-radius: 20px;
+ text-align: center;
+ max-width: 400px;
+ width: 90%;
+ }
+ .modal h3 {
+ color: #ff7e5e;
+ margin-bottom: 20px;
+ }
+ .qrcode {
+ width: 200px;
+ height: 200px;
+ margin: 20px auto;
+ border: 2px solid #eee;
+ border-radius: 10px;
+ padding: 10px;
+ }
+ .close-modal {
+ background: #666;
+ margin-top: 20px;
+ }
+ .close-modal:hover {
+ background: #444;
+ }
+ /* 响应式设计 */
+ @media (max-width: 600px) {
+ .card {
+ padding: 20px 15px 30px;
+ border-radius: 20px;
+ }
+ h1 {
+ font-size: 24px;
+ }
+ .input-group {
+ flex-direction: column;
+ }
+ input, button {
+ width: 100%;
+ }
+ }
+ </style>
+ <!-- 引入 Lottie 库 -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
 <body>
-    <!-- 顶部状态栏 -->
-    <div class="status-bar">
-        <span id="current-time">17:54</span> • 特效祝福
-    </div>
-    
-    <!-- 主内容区域 -->
-    <div class="main-content">
-        <!-- 动画显示区域 -->
-        <div class="animation-container">
-            <lottie-player
-                id="animation-player"
-                src="animations/fireworks.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-            ></lottie-player>
-        </div>
-        
-        <!-- 提示文字 -->
-        <div class="hint-text">
-            输入祝福语，或点击下方快捷词触发特效
-        </div>
-        
-        <!-- 快捷关键词 -->
-        <div class="quick-words">
-            <div class="quick-word" data-word="生日">🎂 生日</div>
-            <div class="quick-word" data-word="恭喜">🎉 恭喜</div>
-            <div class="quick-word" data-word="发财">💰 发财</div>
-            <div class="quick-word" data-word="爱情">❤️ 爱情</div>
-            <div class="quick-word" data-word="节日">🎄 节日</div>
-            <div class="quick-word" data-word="成功">🏆 成功</div>
-        </div>
-        
-        <!-- 付费解锁提示 -->
-        <div class="premium-hint" id="premium-hint">
-            💎 解锁更多高级特效，联系微信：example
-        </div>
-    </div>
-    
-    <!-- 微信风格输入区域 -->
-    <div class="input-area">
-        <div class="input-group">
-            <input type="text" 
-                   class="message-input" 
-                   id="message-input"
-                   placeholder="输入祝福语触发特效..."
-                   autocomplete="off">
-            <button class="send-button" id="send-button">
-                ➤
-            </button>
-        </div>
-    </div>
-    
-    <!-- 底部信息 -->
-    <div class="footer">
-        <p>H5特效祝福页面 • 定制联系: <a href="javascript:void(0)" onclick="showContact()">点击咨询</a></p>
-        <p style="font-size: 11px; margin-top: 5px;">基础版免费 • 高级定制收费</p>
-    </div>
-    
-    <script>
-        // 更新时间
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('current-time').textContent = `${hours}:${minutes}`;
-        }
-        
-        // 初始化时间
-        updateTime();
-        setInterval(updateTime, 60000);
-        
-        // 关键词到动画文件的映射
-        const keywordMap = {
-            '生日': 'animations/cake.json',
-            '恭喜': 'animations/fireworks.json',
-            '发财': 'animations/money.json',
-            '爱情': 'animations/rose.json',
-            '节日': 'animations/fireworks.json',
-            '成功': 'animations/fireworks.json'
-        };
-        
-        // 默认关键词列表
-        const defaultKeywords = ['生日', '恭喜', '发财', '爱情', '节日', '成功'];
-        
-        // 获取动画播放器
-        const player = document.getElementById('animation-player');
-        
-        // 播放动画
-        function playAnimation(animationFile) {
-            player.load(animationFile);
-            player.play();
-            
-            // 显示付费提示（随机显示）
-            if (Math.random() > 0.7) {
-                const hint = document.getElementById('premium-hint');
-                hint.classList.add('show');
-                setTimeout(() => {
-                    hint.classList.remove('show');
-                }, 3000);
-            }
-        }
-        
-        // 处理输入的关键词
-        function processInput() {
-            const input = document.getElementById('message-input');
-            const text = input.value.trim().toLowerCase();
-            
-            if (!text) {
-                input.focus();
-                return;
-            }
-            
-            // 检查是否匹配关键词
-            let matched = false;
-            for (const keyword in keywordMap) {
-                if (text.includes(keyword.toLowerCase())) {
-                    playAnimation(keywordMap[keyword]);
-                    matched = true;
-                    break;
-                }
-            }
-            
-            // 如果没有匹配，播放默认动画
-            if (!matched) {
-                const randomKeyword = defaultKeywords[Math.floor(Math.random() * defaultKeywords.length)];
-                playAnimation(keywordMap[randomKeyword]);
-            }
-            
-            // 清空输入框
-            input.value = '';
-            input.focus();
-        }
-        
-        // 快捷词点击事件
-        document.querySelectorAll('.quick-word').forEach(button => {
-            button.addEventListener('click', function() {
-                const word = this.getAttribute('data-word');
-                document.getElementById('message-input').value = word;
-                processInput();
-            });
-        });
-        
-        // 发送按钮事件
-        document.getElementById('send-button').addEventListener('click', processInput);
-        
-        // 输入框回车事件
-        document.getElementById('message-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                processInput();
-            }
-        });
-        
-        // 显示联系信息
-        function showContact() {
-            alert('📞 定制咨询\n\n微信: example\n电话: 138-xxxx-xxxx\n邮箱: contact@example.com\n\n基础定制: 500-1000元\n高级定制: 1000-3000元\n企业版: 3000-8000元');
-        }
-        
-        // 初始播放一个动画
-        setTimeout(() => {
-            playAnimation('animations/fireworks.json');
-        }, 1000);
-        
-        // 触摸优化
-        document.addEventListener('touchstart', function() {}, {passive: true});
-        
-        // 防止双击缩放
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    </script>
+ <div class="card">
+ <h1>✨ 魔法祝福 ✨</h1>
+ <p>输入下面的词语，会触发全屏特效：</p>
+ <div class="input-group">
+ <input type="text" id="msgInput" placeholder="例如：生日快乐" autocomplete="off">
+ <button id="sendBtn">发送祝福</button>
+ </div>
+ <div class="tips">
+ <span data-keyword="生日快乐">生日快乐</span>
+ <span data-keyword="恭喜发财">恭喜发财</span>
+ <span data-keyword="烟花">烟花</span>
+ <span data-keyword="玫瑰花雨">玫瑰花雨</span>
+ </div>
+ 
+ <div style="margin-top: 20px;">
+ <button id="unlockBtn" class="unlock-btn">✨ 解锁全部特效（9.9元）✨</button>
+ </div>
+ 
+ <p style="margin-top: 20px; font-size: 13px; color: #666;">
+ 💡 体验后分享给朋友，一起开心！<br>
+ 📱 在微信中打开效果最佳
+ </p>
+ </div>
+
+ <!-- 动画容器 -->
+ <div id="animationContainer"></div>
+
+ <!-- 支付二维码模态框 -->
+ <div id="paymentModal" class="modal">
+ <div class="modal-content">
+ <h3>✨ 解锁全部特效 ✨</h3>
+ <p>支付 <strong style="color: #ff7e5e; font-size: 24px;">9.9元</strong> 即可解锁全部特效</p>
+ <div class="qrcode">
+ <!-- 这里应该放你的微信收款码图片 -->
+ <div style="width: 200px; height: 200px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+ <div style="text-align: center;">
+ <div style="font-size: 48px;">💰</div>
+ <div style="font-size: 14px; margin-top: 10px;">微信收款码</div>
+ <div style="font-size: 12px; color: #999; margin-top: 5px;">请替换为你的二维码</div>
+ </div>
+ </div>
+ </div>
+ <p style="font-size: 14px; color: #666; margin-top: 15px;">
+ 支付后请截图联系客服：<br>
+ <strong style="color: #ff7e5e;">微信：xiaozhi888</strong>
+ </p>
+ <button id="closeModal" class="close-modal">关闭</button>
+ </div>
+ </div>
+
+ <script>
+ // 1. 初始化 Lottie 动画（先不播放）
+ let activeAnimation = null;
+
+ function loadAndPlayAnimation(jsonPath) {
+ // 清除旧动画
+ if (activeAnimation) {
+ activeAnimation.destroy();
+ activeAnimation = null;
+ }
+ const container = document.getElementById('animationContainer');
+ // 显示容器
+ container.style.visibility = 'visible';
+ // 加载新动画
+ activeAnimation = lottie.loadAnimation({
+ container: container,
+ renderer: 'svg',
+ loop: false,
+ autoplay: true,
+ path: jsonPath
+ });
+ // 动画播放完毕后隐藏容器（可选，避免遮罩）
+ activeAnimation.addEventListener('complete', () => {
+ container.style.visibility = 'hidden';
+ activeAnimation.destroy();
+ activeAnimation = null;
+ });
+ }
+
+ // 2. 关键词映射表（关键词 -> 动画文件路径）
+ const keywordMap = {
+ '生日快乐': './animations/cake.json',
+ '恭喜发财': './animations/money.json',
+ '烟花': './animations/fireworks.json',
+ '玫瑰花雨': './animations/rose.json' // 高级特效
+ };
+
+ // 3. 解锁状态（本地存储）
+ let isUnlocked = localStorage.getItem('effect_unlocked') === 'true';
+
+ // 4. 获取DOM元素
+ const inputEl = document.getElementById('msgInput');
+ const btn = document.getElementById('sendBtn');
+ const unlockBtn = document.getElementById('unlockBtn');
+ const paymentModal = document.getElementById('paymentModal');
+ const closeModal = document.getElementById('closeModal');
+ const tipSpans = document.querySelectorAll('.tips span');
+
+ // 5. 更新解锁状态显示
+ function updateUnlockStatus() {
+ if (isUnlocked) {
+ unlockBtn.textContent = '✨ 已解锁全部特效 ✨';
+ unlockBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)';
+ unlockBtn.disabled = true;
+ }
+ }
+
+ // 6. 发送逻辑
+ function sendMessage() {
+ let msg = inputEl.value.trim();
+ if (msg === '') {
+ alert('请输入祝福语');
+ return;
+ }
+ 
+ // 检查是否是高级特效
+ if (msg.includes('玫瑰花雨') && !isUnlocked) {
+ alert('🌸 玫瑰花雨特效需要解锁才能使用！\n\n点击"解锁全部特效"按钮，支付9.9元即可解锁全部特效。');
+ return;
+ }
+ 
+ // 遍历关键词，检查是否包含
+ let matched = false;
+ for (let keyword in keywordMap) {
+ if (msg.includes(keyword)) {
+ const jsonFile = keywordMap[keyword];
+ loadAndPlayAnimation(jsonFile);
+ matched = true;
+ break;
+ }
+ }
+ 
+ if (!matched) {
+ alert('试试输入以下关键词：\n\n🎂 生日快乐\n💰 恭喜发财\n🎆 烟花\n🌹 玫瑰花雨（需解锁）');
+ }
+ }
+
+ // 7. 快捷按钮点击事件
+ tipSpans.forEach(span => {
+ span.addEventListener('click', () => {
+ const keyword = span.getAttribute('data-keyword');
+ inputEl.value = keyword;
+ sendMessage();
+ });
+ });
+
+ // 8. 事件监听
+ btn.addEventListener('click', sendMessage);
+ inputEl.addEventListener('keypress', (e) => {
+ if (e.key === 'Enter') sendMessage();
+ });
+
+ unlockBtn.addEventListener('click', () => {
+ if (!isUnlocked) {
+ paymentModal.style.display = 'flex';
+ }
+ });
+
+ closeModal.addEventListener('click', () => {
+ paymentModal.style.display = 'none';
+ });
+
+ // 点击模态框外部关闭
+ paymentModal.addEventListener('click', (e) => {
+ if (e.target === paymentModal) {
+ paymentModal.style.display = 'none';
+ }
+ });
+
+ // 9. 模拟支付成功（实际中需要用户支付后手动解锁）
+ // 这里添加一个隐藏的解锁功能用于测试
+ document.addEventListener('keydown', (e) => {
+ if (e.ctrlKey && e.key === 'u') { // Ctrl+U 模拟解锁
+ isUnlocked = true;
+ localStorage.setItem('effect_unlocked', 'true');
+ updateUnlockStatus();
+ alert('🎉 模拟解锁成功！现在可以使用全部特效了！');
+ }
+ });
+
+ // 10. 初始化
+ updateUnlockStatus();
+ 
+ // 页面加载完成提示
+ window.addEventListener('load', () => {
+ console.log('🎉 特效祝福页面加载完成！');
+ console.log('💡 提示：按 Ctrl+U 可以模拟解锁全部特效（仅测试用）');
+ });
+ </script>
 </body>
 </html>
