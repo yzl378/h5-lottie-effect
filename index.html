@@ -57,6 +57,8 @@
             background: #000;
             overflow: hidden;
             position: relative;
+            /* 确保在键盘显示/隐藏时能正确调整 */
+            transition: height 0.3s ease;
         }
         
         lottie-player {
@@ -333,6 +335,71 @@
         let isPlaying = true;
         let hasSound = true;
         
+        // 键盘隐藏函数
+        function hideKeyboard() {
+            const input = document.getElementById('message-input');
+            input.blur();
+            
+            // 显示键盘隐藏提示
+            const hint = document.getElementById('hint-text');
+            const originalHint = hint.textContent;
+            hint.textContent = '键盘已隐藏，尽情观赏动画！';
+            hint.style.color = '#07c160';
+            
+            // 3秒后恢复原提示
+            setTimeout(() => {
+                hint.textContent = originalHint;
+                hint.style.color = 'rgba(255, 255, 255, 0.7)';
+            }, 2000);
+            
+            // 如果是移动设备，使用更可靠的方法隐藏键盘
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // 方法1: 创建隐藏输入框转移焦点
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'text');
+                hiddenInput.style.position = 'absolute';
+                hiddenInput.style.opacity = '0';
+                hiddenInput.style.height = '0';
+                hiddenInput.style.width = '0';
+                hiddenInput.style.top = '-100px';
+                document.body.appendChild(hiddenInput);
+                
+                // 先聚焦再立即移除焦点
+                setTimeout(() => {
+                    hiddenInput.focus();
+                    setTimeout(() => {
+                        hiddenInput.blur();
+                        document.body.removeChild(hiddenInput);
+                    }, 10);
+                }, 10);
+                
+                // 方法2: 滚动页面一点点（iOS上有效）
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 20);
+                
+                // 方法3: 改变body高度（某些Android设备有效）
+                setTimeout(() => {
+                    document.body.style.height = 'calc(100% + 1px)';
+                    setTimeout(() => {
+                        document.body.style.height = '100%';
+                    }, 100);
+                }, 30);
+            }
+            
+            // 确保输入框失去焦点
+            setTimeout(() => {
+                input.blur();
+            }, 50);
+            
+            // 动画区域轻微放大效果，强调键盘已隐藏
+            const animationArea = document.querySelector('.animation-area');
+            animationArea.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                animationArea.style.transform = 'scale(1)';
+            }, 300);
+        }
+        
         // 播放动画
         function playAnimation(animationFile) {
             player.load(animationFile);
@@ -385,15 +452,24 @@
             
             // 清空输入框
             input.value = '';
-            input.focus();
+            // 隐藏键盘
+            hideKeyboard();
         }
         
         // 快捷按钮点击事件
         document.querySelectorAll('.float-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const word = this.getAttribute('data-word');
-                document.getElementById('message-input').value = word;
-                processInput();
+                const input = document.getElementById('message-input');
+                input.value = word;
+                
+                // 隐藏键盘
+                hideKeyboard();
+                
+                // 延迟一点时间再触发动画，确保键盘已隐藏
+                setTimeout(() => {
+                    processInput();
+                }, 50);
             });
         });
         
@@ -460,6 +536,27 @@
         window.addEventListener('load', function() {
             console.log('🎯 极简特效页面加载完成');
             console.log('💡 设计理念: 最大化动画区域，极简操作');
+            
+            // 添加全局点击事件：点击动画区域时隐藏键盘
+            document.querySelector('.animation-area').addEventListener('click', function(e) {
+                // 如果点击的不是输入框或按钮
+                if (!e.target.closest('.mini-input') && !e.target.closest('.float-btn') && 
+                    !e.target.closest('.control-btn') && !e.target.closest('.premium-badge')) {
+                    hideKeyboard();
+                }
+            });
+            
+            // 添加输入框失去焦点时的动画区域调整
+            const input = document.getElementById('message-input');
+            input.addEventListener('blur', function() {
+                // 键盘隐藏后，可以做一些UI调整
+                document.body.style.height = '100vh';
+            });
+            
+            input.addEventListener('focus', function() {
+                // 键盘显示时，可以做一些UI调整
+                console.log('键盘显示，动画区域可能会被压缩');
+            });
         });
     </script>
 </body>
